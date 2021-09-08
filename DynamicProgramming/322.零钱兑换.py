@@ -3,6 +3,7 @@
 
 完全背包
 518.零钱兑换II  组合问题 -- 70.爬楼梯  (vs 零钱兑换II)  排列问题
+377.组合综合IV  排列问题
 
 '''
 from typing import List
