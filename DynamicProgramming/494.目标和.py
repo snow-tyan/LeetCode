@@ -4,6 +4,7 @@
 494.目标和
 1049.最后一块儿石头重量II
 474.一和零
+879.盈利计划 hard
 '''
 from typing import List, Tuple
 import numpy as np
@@ -133,10 +134,48 @@ class Solution:
                     dp[j][k] = max(dp[j][k], dp[j - zero][k - one] + 1)
         return dp[m][n]
 
+    def profitableSchemes(self, n: int, minProfit: int, group: List[int], profit: List[int]) -> int:
+        # 返回结果模1e9+7
+        # 01背包，每名员工只能参加一项工作
+        # 背包容量n, 物品重量group[i], 物品价值profit[i], 要求至少产生minProfit利润
+        # dp[i][j][k] 前i个物品容量j产生至少价值k的方案数
+        # MOD = 10 ** 9 + 7
+        # m = len(group)
+        # int[m+1][n+1][minProfit+1]
+        # dp = [[[0] * (minProfit + 1) for _ in range(n + 1)] for _ in range(m + 1)]
+        # # base case
+        # dp[0][0][0] = 1
+        # for i in range(1, m + 1):  # group[i-1]
+        #     for j in range(n + 1):
+        #         for k in range(minProfit + 1):
+        #             if j - group[i - 1] < 0:
+        #                 dp[i][j][k] = dp[i - 1][j][k]
+        #             else:
+        #                 dp[i][j][k] = (dp[i - 1][j][k] + dp[i - 1][j - group[i - 1]][max(0, k - profit[i - 1])]) % MOD
+        #
+        # total = sum(dp[m][j][minProfit] for j in range(n + 1))
+        # return total % MOD
+
+        MOD = 10 ** 9 + 7
+        m = len(group)
+        dp = [[0] * (minProfit + 1) for _ in range(n + 1)]
+        dp[0][0] = 1
+        for i in range(1, m + 1):
+            for j in range(n, group[i - 1] - 1, -1):
+                for k in range(minProfit, -1, -1):
+                    dp[j][k] = (dp[j][k] + dp[j - group[i - 1]][max(0, k - profit[i - 1])]) % MOD
+        total = sum(dp[j][minProfit] for j in range(n + 1))
+        return total % MOD
+
 
 solve = Solution()
-nums = [1, 5, 3, 5]
-strs = ["10", "0001", "111001", "1", "0"]
-m = 5
-n = 3
-print(solve.findMaxForm(strs, m, n))
+# nums = [1, 5, 3, 5]
+# strs = ["10", "0001", "111001", "1", "0"]
+# m = 5
+# n = 3
+
+n = 10
+minProfit = 5
+group = [2, 3, 5]
+profit = [6, 7, 8]
+print(solve.profitableSchemes(n, minProfit, group, profit))

@@ -52,6 +52,20 @@ class Solution:
         #
         # return dp[amount]
 
+    def combinationSum4(self, nums: List[int], target: int) -> int:
+        # 完全背包，nums[i]可以多次取用
+        # dp[i][j] 组合长度为i，和为j的组合个数，那么 0<=i,j<=target 和完全背包略有区别
+        # 若要用二维dp做，最后要对dp[i][target]求最后一列之和，二维还挺复杂，mark
+        # 而一维只要调换内外循环就可以规避掉
+
+        dp = [0] * (target + 1)
+        dp[0] = 1
+        for j in range(1, target + 1):
+            for num in nums:  # 之所以要放到内循环，保证每次都从头开始取
+                if j >= num:
+                    dp[j] += dp[j - num]
+        return dp[target]
+
 
 amount = 5
 coins = [1, 2, 5]
