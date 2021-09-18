@@ -19,7 +19,6 @@ void backtracking(参数) {
 }
 
 22.括号生成
-46.全排列
 '''
 from typing import List
 
@@ -45,29 +44,6 @@ class Solution:
         backtrack([], 0, 0)
         return res
 
-    def permute(self, nums: List[int]) -> List[List[int]]:
-        def backtracking() -> None:
-            if len(array) == n:
-                res.append(array[:])  # 复制列表 array.copy()
-                return
-            for i in range(n):
-                if visited[i]:
-                    continue
-                visited[i] = True
-                array.append(nums[i])
-                backtracking()
-                array.pop()
-                visited[i] = False
-
-        res = []
-        n = len(nums)
-        array = []
-        visited = [False] * n
-        backtracking()
-        return res
-
 
 solve = Solution()
 # print(solve.generateParenthesis(2))
-nums = [1, 2, 3]
-print(solve.permute(nums))

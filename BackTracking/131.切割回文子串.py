@@ -23,7 +23,7 @@ class Solution:
                 return
             for i in range(start_idx, len(s)):  # i 宽度 同层切割位置
                 substr = s[start_idx:i + 1]  # start_idx 深度 下层切割起始位置
-                if not isvalid(substr):
+                if not isvalid(substr):  # 前段不合法，还有继续遍历
                     continue
                 path.append(substr)
                 backtracking(i + 1)
@@ -53,7 +53,7 @@ class Solution:
                 return
             for i in range(start_idx, len(s)):  # i 宽度 同层切割位置
                 substr = s[start_idx:i + 1]  # start_idx 深度 下层切割起始位置
-                if not isvalid(substr):
+                if not isvalid(substr):  # 前段不合法，不用走了
                     break
                 path.append(substr + '.')
                 point_num += 1
@@ -69,4 +69,4 @@ class Solution:
 
 solve = Solution()
 # print(solve.partition('aab'))
-print(solve.restoreIpAddresses('19216811'))
+# print(solve.restoreIpAddresses('19216811'))
