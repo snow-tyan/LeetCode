@@ -41,9 +41,34 @@ class Solution:
 
         return res
 
-
+    def minWindow(self, s: str, t: str) -> str:
+        sub = ''
+        i, j = 0, 0
+        cnt_t = collections.Counter()  # t {字符：字符个数}
+        cnt_w = collections.Counter()  # 窗口内 {字符：字符个数}
+        match = 0  # 记录窗口内字符和t内字符匹配情况  match==len(cnt_t)
+        for ch in t:
+            cnt_t[ch] += 1
+        while j < len(s):
+            if s[j] in cnt_t.keys():  # 匹配字符才放入窗口内
+                cnt_w[s[j]] += 1
+                if cnt_w[s[j]] == cnt_t[s[j]]:
+                    match += 1
+            j += 1
+            while match == len(cnt_t):  # 已匹配，寻找最小子串
+                if j - i < len(sub) or not sub:
+                    sub = s[i:j]
+                if s[i] in cnt_w.keys():
+                    cnt_w[s[i]] -= 1
+                    if cnt_w[s[i]] == 0:
+                        cnt_w.pop(s[i])
+                    if cnt_w[s[i]] < cnt_t[s[i]]:
+                        match -= 1
+                i += 1
+        return sub
 
 
 solve = Solution()
 # print(solve.minSubArrayLen(11, [1, 1, 1, 1, 1, 1, 1, 1]))
-print(solve.totalFruit([3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4]))
+# print(solve.totalFruit([3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4]))
+print(solve.minWindow(s='ADOBECODEBANC', t='ABC'))

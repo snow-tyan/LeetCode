@@ -19,7 +19,7 @@ class Solution:
             alpha = [0] * 26
             for ch in st:
                 alpha[ord(ch) - ord('a')] += 1
-                key = tuple(alpha)
-                mp[key].append(st)
+            key = tuple(alpha)
+            mp[key].append(st)
 
         return list(mp.values())
