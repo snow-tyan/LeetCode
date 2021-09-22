@@ -1,3 +1,7 @@
+'''
+111.二叉树的最小深度
+104.二叉树的最大深度
+'''
 from collections import deque
 
 
@@ -27,20 +31,40 @@ class Solution:
 
     # 广搜，遍历到叶子节点时即可返回
     def minDepthBFS(self, root: TreeNode) -> int:
+        # 广搜，遍历到叶子节点 停
         if not root:
             return 0
-        que = deque([(root, 1)])
+        que = deque([root])
+        depth = 0
         while que:
-            node, dep = que.popleft()
-            # 叶子节点，返回
-            if not node.left and not node.right:
-                return dep
-            if node.left:
-                que.append((node.left, dep + 1))
-            if node.right:
-                que.append((node.right, dep + 1))
+            n = len(que)
+            depth += 1
+            for _ in range(n):
+                node = que.popleft()
+                # 叶子节点，返回
+                if not node.left and not node.right:
+                    return depth
+                if node.left:
+                    que.append(node.left)
+                if node.right:
+                    que.append(node.right)
         return 0
 
+    def maxDepth(self, root: TreeNode) -> int:
+        if not root:
+            return 0
+        queue = deque([root])
+        depth = 0
+        while queue:
+            n = len(queue)
+            depth += 1
+            for _ in range(n):
+                node = queue.popleft()
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+        return depth
 
 if __name__ == '__main__':
     root1 = TreeNode(3)

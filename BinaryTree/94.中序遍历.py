@@ -166,7 +166,8 @@ class SolutionIteration:
         result = []
         while queue:
             lay = []
-            for _ in range(len(queue)):
+            n = len(queue)
+            for _ in range(n):
                 node = queue.popleft()
                 lay.append(node.val)
                 if node.left:
