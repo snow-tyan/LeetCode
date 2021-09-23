@@ -4,6 +4,7 @@
 114.二叉树拉平成链表
 116.填充每个节点的右侧next指针
 '''
+import collections
 
 
 # Definition for a binary tree node.
@@ -24,14 +25,30 @@ class Node:
 
 class Solution:
     def invertTree(self, root: TreeNode) -> TreeNode:
-        # 交换每个节点的左右孩子
+        # # 交换每个节点的左右孩子
+        # if not root:
+        #     return root
+        #
+        # left = self.invertTree(root.left)
+        # right = self.invertTree(root.right)
+        # root.left, root.right = right, left
+        #
+        # return root
+
         if not root:
             return root
-
-        left = self.invertTree(root.left)
-        right = self.invertTree(root.right)
-        root.left, root.right = right, left
-
+        # 层序遍历
+        queue = collections.deque([root])
+        while queue:
+            n = len(queue)
+            for _ in range(n):
+                node = queue.popleft()
+                # 交换
+                node.left, node.right = node.right, node.left
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
         return root
 
     def flatten(self, root: TreeNode) -> None:
@@ -55,7 +72,6 @@ class Solution:
         while root.right:
             root = root.right
         root.right = temp.right
-
 
     def connect(self, root: 'Node') -> 'Node':
         def connectTwoNode(node1: 'Node', node2: 'Node') -> None:

@@ -1,6 +1,5 @@
 '''
 BST
-100.判断俩二叉树是否相同
 98.验证二叉搜索树是否合法
 450.二叉搜索树的删除 *
 700.二叉搜索树的查找
@@ -16,55 +15,24 @@ class TreeNode:
 
 
 class Solution:
-    def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
-        # 两树均空
-        if not p and not q:
-            return True
-        # 一空一非空
-        elif not p or not q:
-            return False
-
-        res = False
-        # 两树均非空，递归判断
-        if p.val == q.val:
-            # 左子树
-            res = self.isSameTree(p.left, q.left)
-            # 左子树真，才判断右子树
-            if res:
-                res = self.isSameTree(p.right, q.right)
-
-        return res
+    def __init__(self):
+        self.max_val = float('-inf')
 
     def isValidBST(self, root: TreeNode) -> bool:
-        # 辅助函数，帮助递归，
-        # root：节点 lower 下界 upper 上界
-        def helper(root: TreeNode, lower=None, upper=None) -> bool:
-            if not root:
-                return True
+        # 最简单的做法：中序遍历，存下结果 看是否为升序
 
-            if lower and root.val <= lower.val:
-                return False
-            if upper and root.val >= upper.val:
-                return False
-            # 递归调用左子树，修改上界
-            # 递归调用右子树，修改下界
-            return helper(root.left, lower, root) and helper(root.right, root, upper)
-
-        return helper(root)
-
-    def searchBST(self, root: TreeNode, val: int) -> TreeNode:
-        # 二叉搜索树
-        # 返回该节点为root的子树
+        # 递归：每次只检查当前值是不是比上个节点的值大
         if not root:
-            return root
+            return True
+        # 中序
+        left = self.isValidBST(root.left)
+        if self.max_val < root.val:
+            self.max_val = root.val
+        else:
+            return False
+        right = self.isValidBST(root.right)
 
-        if root.val == val:
-            return root
-        # val 大于 root， 则在左子树
-        elif root.val > val:
-            return self.searchBST(root.left, val)
-        elif root.val < val:
-            return self.searchBST(root.right, val)
+        return left and right
 
     def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode:
         # 输入数据保证，val不同于原始二叉搜索树

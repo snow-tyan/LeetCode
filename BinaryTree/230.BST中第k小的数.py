@@ -1,7 +1,6 @@
 '''
 230.BST中第k小的数
 538.BST转累加树
-1038.同538
 '''
 from typing import List
 
