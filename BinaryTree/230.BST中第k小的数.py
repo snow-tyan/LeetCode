@@ -1,6 +1,9 @@
 '''
+BST
 230.BST中第k小的数
 538.BST转累加树
+669.修剪BST树
+108.有序数组转BST树
 '''
 from typing import List
 
@@ -73,6 +76,47 @@ class Solution:
             reverseInorder(root.left)
 
         reverseInorder(root)
+        return root
+
+    def trimBST(self, root: TreeNode, low: int, high: int) -> TreeNode:
+        if not root:
+            return root
+        if root.val < low:
+            return self.trimBST(root.right, low, high)
+        if root.val > high:
+            return self.trimBST(root.left, low, high)
+        root.left = self.trimBST(root.left, low, high)
+        root.right = self.trimBST(root.right, low, high)
+        return root
+
+    def trimBSTIter(self, root: TreeNode, low: int, high: int) -> TreeNode:
+        if not root:
+            return root
+        # 1 让root在[low, high]范围内
+        while root and (root.val > high or root.val < low):
+            if root.val > high:
+                root = root.left
+            else:
+                root = root.right
+        cur = root
+        while cur:
+            while cur.left and cur.left.val < low:  # 左孩子<low
+                cur.left = cur.left.right
+            cur = cur.left
+        cur = root
+        while cur:
+            while cur.right and cur.right.val > high:  # 右孩子>high
+                cur.right = cur.right.left
+            cur = cur.right
+        return root
+
+    def sortedArrayToBST(self, nums: List[int]) -> TreeNode:
+        if not nums:
+            return None
+        mid = len(nums) // 2
+        root = TreeNode(nums[mid])
+        root.left = self.sortedArrayToBST(nums[:mid])
+        root.right = self.sortedArrayToBST(nums[mid + 1:])
         return root
 
 

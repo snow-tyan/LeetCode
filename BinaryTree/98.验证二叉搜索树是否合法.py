@@ -1,9 +1,8 @@
 '''
 BST
 98.验证二叉搜索树是否合法
-450.二叉搜索树的删除 *
-700.二叉搜索树的查找
 701.二叉搜索树的插入
+450.二叉搜索树的删除 *
 '''
 
 
@@ -51,37 +50,53 @@ class Solution:
 
     def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
         # 1 查找
-        # 2 删除
-        def getMinNode(root: TreeNode) -> TreeNode:
-            # 已知root必有左右孩子
-            # 二叉搜索树，最左端就是最小节点
+        # 2 删除 五种情况
+        #    1 没找到，遍历到空结点返回
+        #    2 是叶子节点  返回NULL
+        #    3 左孩子为空  返回右孩子
+        #    4 右孩子为空  返回左孩子
+        #    5 左右孩子均非空
+        #        1 左子树接到右子树最左边
+        #        2 或将右子树接到左子树最右边
+
+        # ps.第五种情况通用的删除 是root与孩子节点值做交换然后删掉孩子节点
+        def leftmost(root: TreeNode) -> TreeNode:
+            # root必有左右孩子
             while root.left:
                 root = root.left
             return root
 
-        def getMaxNode(root: TreeNode) -> TreeNode:
+        def rightmost(root: TreeNode) -> TreeNode:
             while root.right:
                 root = root.right
             return root
 
         if not root:
             return root
-        if root.val == key:
-            # delete key
-            # 如果是叶子节点，直接删掉
-            # 如果有一个孩子，孩子代替该节点
+        if root.val == key:  # 找到了
+            # 2 叶子节点，直接删掉
+            # 3 4 有一个孩子，孩子代替该节点
             if not root.left:
                 return root.right
             if not root.right:
                 return root.left
-            # 如果左右都有孩子，需要找到左子树最大节点或右子树最小节点代替
-            # minNode = getMinNode(root.right)
-            # root.val = minNode.val
-            # root.right = self.deleteNode(root.right, minNode.val)
+            # 5 左右都有孩子
+            # 1 左子树接到右子树最左边
+            # r_leftmost = leftmost(root.right)
+            # r_leftmost.left = root.left
+            # temp = root
+            # root = root.right  # 返回右子树
+            # del temp
+            # return root
 
-            maxNode = getMaxNode(root.left)
-            root.val = maxNode.val
-            root.left = self.deleteNode(root.left, maxNode.val)
+            # 2 右子树接到左子树最右边
+            l_rightmost = rightmost(root.left)
+            l_rightmost.right = root.right
+            temp = root
+            root = root.left
+            del temp
+            return root
+
         elif root.val > key:
             root.left = self.deleteNode(root.left, key)
         elif root.val < key:

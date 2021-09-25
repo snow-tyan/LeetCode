@@ -11,17 +11,33 @@ import functools
 
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
-        # 从说明可知 sum(gas)<=sum(cost)
-        if sum(gas) < sum(cost):
-            return -1
+        # # 从说明可知 sum(gas)<=sum(cost)
+        # if sum(gas) < sum(cost):
+        #     return -1
+        # n = len(gas)
+        # diff = [gas[i] - cost[i] for i in range(n)]
+        # print(diff)
+        # preSum = [0]  # 求diff前缀和，前缀和最小处出发，可保证油箱始终大于0
+        # for i in range(n):
+        #     preSum.append(preSum[i] + diff[i])
+        # print(preSum)
+        # return preSum.index(min(preSum))
+
+        # 上述方法不能说是贪心，因为没有从局部最优->总体最优
+        # 真正的贪心，当cur_sum小于0时，从下一节点开始出发
         n = len(gas)
-        diff = [gas[i] - cost[i] for i in range(n)]
-        print(diff)
-        preSum = [0]  # 求diff前缀和，前缀和最小处出发，可保证油箱始终大于0
+        start = 0
+        total_sum = 0
+        cur_sum = 0
         for i in range(n):
-            preSum.append(preSum[i] + diff[i])
-        print(preSum)
-        return preSum.index(min(preSum))
+            total_sum += gas[i] - cost[i]
+            cur_sum += gas[i] - cost[i]
+            if cur_sum < 0:
+                cur_sum = 0
+                start = i + 1
+        if total_sum < 0:
+            return -1
+        return start
 
     def numRabbits(self, answers: List[int]) -> int:
         # 每个兔子看到和自己同色的兔子
