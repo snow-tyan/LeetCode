@@ -54,7 +54,35 @@ class Solution:
         backtracking()
         return res
 
+    def permuteN(self, n: int, k: int) -> str:
+        def backtracking() -> None:
+            nonlocal nums
+            if len(res) == k:  # 剪枝
+                return
+            if len(path) == n:
+                res.append(path[:])
+                return
+            for i in range(n):
+                if used[i]:
+                    continue
+                used[i] = True
+                path.append(str(nums[i]))
+                backtracking()
+                path.pop()
+                used[i] = False
+
+        res = []
+        nums = []
+        for i in range(1, n + 1):
+            nums.append(i)  # nums=[1,2,3,...,n] 有序
+        path = []
+        used = [False] * n
+        backtracking()
+        # print(res)
+        return ''.join(res[-1])
+
 
 solve = Solution()
 # print(solve.permute([1, 2, 3]))
-print(solve.permuteUnique([1, 1, 2]))
+# print(solve.permuteUnique([1, 1, 2]))
+print(solve.permuteN(n=4, k=3))

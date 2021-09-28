@@ -11,18 +11,22 @@ from typing import List
 
 # 0-1背包
 def knapsack(W: int, N: int, wt: List[int], val: List[int]) -> int:
-    # dp[i][j] 前i个物品，背包容量为j时，所装最大价值
-    # dp = [[0] * (W + 1) for _ in range(N + 1)]
-    # # base case: dp[0][j]=dp[i][0]=0
-    # for i in range(1, N + 1):
-    #     for j in range(1, W + 1):
-    #         if j < wt[i - 1]:
+    # # dp[i][j] 下标0-i的物品，背包容量为j时，所装最大价值
+    # dp = [[0] * (W + 1) for _ in range(N)]  # N=len(wt)=len(val)
+    # # base case
+    # # dp[i][0] = 0
+    # for j in range(wt[0]):  # j<wt[0]
+    #     dp[0][j] = 0
+    # for j in range(wt[0], W + 1):  # j>=wt[0]
+    #     dp[0][j] = val[0]
+    # for i in range(1, N):  # 遍历物品i
+    #     for j in range(W + 1):  # 遍历背包容量j
+    #         if j < wt[i]:
     #             dp[i][j] = dp[i - 1][j]
     #         else:
     #             dp[i][j] = max(dp[i - 1][j],  # 不把第i个物品装进背包
-    #                            # i从1开始，wt[i-1]和val[i-1]是索引偏移
-    #                            dp[i - 1][j - wt[i - 1]] + val[i - 1])  # 把第i个物品装进背包
-    # return dp[N][W]
+    #                            dp[i - 1][j - wt[i]] + val[i])  # 把第i个物品装进背包
+    # return dp[N - 1][W]
 
     # 空间优化
     dp = [0] * (W + 1)
@@ -30,8 +34,8 @@ def knapsack(W: int, N: int, wt: List[int], val: List[int]) -> int:
     # dp[0] = 0
     for i in range(N):
         for j in range(W, wt[i] - 1, -1):  # 从后往前遍历[W，wt[i]]
-            # 从后往前遍历，保证递推是由上一个物品时留下的数组更新过来的
-            # 不用判断j-wt[i]>=0是因为循环到j==wt[i]就停了
+            # 倒序为了保证物品i只被放入一次 每次取得的状态不会和上一次重合
+            # 也是因为倒序，所以遍历顺序不能改 先物品再背包容量
             dp[j] = max(dp[j],  # 不把第i个物品装进背包
                         # i从0开始无需偏移
                         dp[j - wt[i]] + val[i])  # 把第i个物品装进背包
@@ -40,18 +44,22 @@ def knapsack(W: int, N: int, wt: List[int], val: List[int]) -> int:
 
 # 完全背包
 def complete_knapsack(W: int, N: int, wt: List[int], val: List[int]) -> int:
-    # # dp[i][j] 前i个物品，背包容量为j时，所装最大价值
-    # dp = [[0] * (W + 1) for _ in range(N + 1)]
-    # # base case: dp[0][j]=dp[i][0]=0
-    # for i in range(1, N + 1):
-    #     for j in range(1, W + 1):
-    #         if j < wt[i - 1]:
+    # # dp[i][j] 下标0-i的物品，背包容量为j时，所装最大价值
+    # dp = [[0] * (W + 1) for _ in range(N)]
+    # base case
+    # # dp[i][0] = 0
+    # for j in range(wt[0]):  # j<wt[0]
+    #     dp[0][j] = 0
+    # for j in range(wt[0], W + 1):  # j>=wt[0]
+    #     dp[0][j] = val[0]
+    # for i in range(1, N):  # 遍历物品i
+    #     for j in range(W + 1):  # 遍历背包容量j
+    #         if j < wt[i]:
     #             dp[i][j] = dp[i - 1][j]
     #         else:
     #             dp[i][j] = max(dp[i - 1][j],  # 不把第i个物品装进背包
-    #                            # i从1开始，wt[i-1]和val[i-1]是索引偏移
-    #                            dp[j][j - wt[i - 1]] + val[i - 1])  # 把第i个物品装进背包
-    # return dp[N][W]
+    #                            dp[i][j - wt[i]] + val[i])  # 把第i个物品装进背包
+    # return dp[N - 1][W]
 
     # 空间优化
     dp = [0] * (W + 1)
@@ -59,6 +67,7 @@ def complete_knapsack(W: int, N: int, wt: List[int], val: List[int]) -> int:
     # dp[0] = 0
     for i in range(N):
         for j in range(wt[i], W + 1):  # [wt[i], W]
+            # 遍历顺序可以改，先物品先背包容量
             dp[j] = max(dp[j], dp[j - wt[i]] + val[i])
     return dp[W]
 

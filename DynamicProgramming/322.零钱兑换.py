@@ -2,7 +2,8 @@
 完全背包
 322.零钱兑换
 518.零钱兑换II  组合问题 -- 70.爬楼梯  (vs 零钱兑换II)  排列问题
-377.组合综合IV  排列问题
+    # 爬楼梯若改成数组传参，一次可以爬几层，问有几种方法爬到楼顶，就是个完全背包排列问题
+377.组合总和IV  排列问题
 139.单词拆分 dfs+bfs+dp
 279.完全平方数 bfs+dp+贪心
 1449.数位成本和为目标值的最大数字 hard
@@ -13,18 +14,26 @@ import math
 
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        # dp[i] amount=i时 所需最小硬币数
-        # dp[i] = min(dp[i], dp[i-coin]+1)
-        dp = [amount + 1] * (amount + 1)  # 初始化为amount+1，因为不可能大于这个数
+        # # dp[i] amount=i时 所需最小硬币数
+        # # dp[i] = min(dp[i], dp[i-coin]+1)
+        # dp = [amount + 1] * (amount + 1)  # 初始化为amount+1，因为不可能大于这个数
+        # dp[0] = 0
+        # for i in range(1, amount + 1):
+        #     for coin in coins:
+        #         if i - coin < 0:  # 不合法，跳过
+        #             continue
+        #         dp[i] = min(dp[i], dp[i - coin] + 1)
+        # if dp[amount] == amount + 1:  # 大于amount，说明找不到组合
+        #     return -1
+        # return dp[amount]
+
+        n = len(coins)
+        dp = [float('inf')] * (amount + 1)
         dp[0] = 0
-        for i in range(1, amount + 1):
-            for coin in coins:
-                if i - coin < 0:  # 不合法，跳过
-                    continue
-                dp[i] = min(dp[i], dp[i - coin] + 1)
-        if dp[amount] == amount + 1:  # 大于amount，说明找不到组合
-            return -1
-        return dp[amount]
+        for i in range(n):
+            for j in range(coins[i], amount + 1):
+                dp[j] = min(dp[j], dp[j - coins[i]] + 1)
+        return dp[amount] if dp[amount] != float('inf') else -1
 
     def change(self, amount: int, coins: List[int]) -> int:
         # dp[i][j] 表示 前i种硬币 恰好组成金额j的组合数
@@ -90,16 +99,15 @@ class Solution:
     def numSquares(self, n: int) -> int:
         # 转换为完全背包
         # 给定1,4,9,16,... 求组成n的最小数量，每个数字无限次
-        store = [i ** 2 for i in range(1, 1 + int(math.sqrt(n)))]
-        print(store)
-        m = len(store)
-        dp = [10000] * (n + 1)
+        square = [i * i for i in range(1, 1 + int(math.sqrt(n)))]
+        print(square)
+        m = len(square)
+        dp = [float('inf')] * (n + 1)
         # base case
         dp[0] = 0
         for i in range(m):
-            # store[i]=(i+1)**2
-            for j in range(store[i], n + 1):
-                dp[j] = min(dp[j], dp[j - store[i]] + 1)
+            for j in range(square[i], n + 1):
+                dp[j] = min(dp[j], dp[j - square[i]] + 1)
         return dp[n]
 
     def largestNumber(self, cost: List[int], target: int) -> str:
