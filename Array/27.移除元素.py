@@ -112,7 +112,7 @@ class Solution:
         return res
 
 
-solve = Solution()
+# solve = Solution()
 # print(solve.removeElement([0, 1, 0, 3, 12], 0))
 # print(solve.removeDuplicates([0, 0, 1, 1, 1, 2, 2, 3, 3, 4]))
-print(solve.backspaceCompare(s='xywrrmp', t="xywrrmu#p"))
+# print(solve.backspaceCompare(s='xywrrmp', t="xywrrmu#p"))
